@@ -1,0 +1,14 @@
+.main-ul{
+    list-style: none;
+}
+.main-li{
+
+}
+.main-span{
+    color: rgb(255, 245, 245);
+    font-size: large ;
+}
+.main-error-span{
+    color: rgb(255, 0, 0);
+    font-size: large ;
+}
