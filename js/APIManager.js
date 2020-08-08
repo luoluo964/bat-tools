@@ -2,17 +2,25 @@ var dogDiaryI="https://v1.alapi.cn/api/dog";  //舔狗日记
 var lunarDateI="https://v1.alapi.cn/api/lunar";   //农历查询
 var poetryI="https://v1.alapi.cn/api/shici";   //古诗
 var ipI="https://httpbin.org/ip";   //ip信息
-
+var loverWordsI="https://v1.alapi.cn/api/qinghua";   //土味情话
+var beaupicI="https://v1.alapi.cn/api/acg";   //来一张漂亮的图片
+var translateI="https://v1.alapi.cn/api/fanyi";   //在线翻译
 
 var ul;
 
 //页面加载后进行绑定
 $(function(){
     ul=$("#main-ul");   //消息处ul
+    
+    initTranslate();   //初始化在线翻译功能
+
     $("#dog-diary").click(dogDiary);
     $("#lunar-date").click(lunarDate);
     $("#poetry").click(poetry);
     $("#ip-message").click(ipMessage);
+    $("#lover-words").click(loverWords);
+    $("#beau-pic").click(beauPic);
+    $("#translate").click(translate);
 
     $("#about-me").click(aboutMe);
 });
@@ -50,7 +58,7 @@ lunarDate=function(){
     //阳历日期的获取
     var date=new Date();
     var year=date.getFullYear();
-    var month=date.getMonth();
+    var month=date.getMonth()+1;
     var day=date.getDate();
 
     //阴历日期的定义
@@ -167,6 +175,128 @@ ipMessage=function(){
     });
 }
 
+//土味情话查询
+loverWords=function(){
+    ul.html("");  //清空
+
+    var wordsLi=$("<li></li>");
+    wordsLi.addClass("main-li");
+
+    $.ajax({ 
+        url: loverWordsI,
+        success: function(data){
+            var loverSpan=$("<span></span>");
+            loverSpan.addClass("main-span");
+            loverSpan.html(data.data.content);
+            wordsLi.append(loverSpan);
+            wordsLi.css("text-align","center")
+            ul.append(wordsLi);
+            showSlow(wordsLi);    
+        },
+        timeout:5000,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            ajaxError(ul,textStatus);
+        }
+    });
+}
+
+//一张美丽的图片
+beauPic=function(){
+    ul.html("");  //清空
+
+    var li=$("<li></li>");
+    li.addClass("main-li");
+
+    $.ajax({ 
+        url: beaupicI,
+        type: 'POST',
+        data: {format:"json"},
+        success: function(data){
+            var picUrl=data.data.url;
+            var beauImg=$("<img src='"+picUrl+"'/>");
+            beauImg.addClass("beau-pic");
+            li.append(beauImg);
+            li.css("text-align","center")
+            ul.append(li);
+            showSlow(ul);
+        },
+        timeout:5000,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            ajaxError(ul,textStatus);
+        }
+    });
+}
+
+//在线翻译 初始化
+initTranslate=function(){
+    $("#modal-header h4").html("在线翻译");
+
+    var text=$("<span>翻译内容： </span>");
+    var tranText=$("<textarea rows='2' cols='35' id='translate-content'></textarea><br/><br/>");
+
+    var textSpan1=$("<span>原始语种： </span>");
+    var select1=$("<select id='origin-language'>"
+            +"<option selected='selected' value='zh'>中文</option>"
+            +"<option value='en'>英文</option>"
+            +"<option value='yue'>粤语</option>"
+            +"<option value='jp'>日文</option>"
+            +"</select><br/><br/>");
+    var textSpan2=$("<span>目标语种： </span>");
+    var select2=$("<select id='target-language'>"
+                    +"<option selected='selected' value='en'>英文</option>"
+                    +"<option value='zh'>中文</option>"
+                    +"<option value='yue'>粤语</option>"
+                    +"<option value='jp'>日文</option>"
+                    +"</select><br/><br/>");
+
+    $("#modal-body").append(text);
+    $("#modal-body").append(tranText);
+    $("#modal-body").append(textSpan1);
+    $("#modal-body").append(select1);
+    $("#modal-body").append(textSpan2);
+    $("#modal-body").append(select2);
+}
+translate=function(){
+    ul.html("");  //清空
+
+    var li=$("<li></li>");
+    li.addClass("main-li");
+
+    var tranText=$("#translate-content").val(); //翻译文本
+    var originLanguage=$("#origin-language").val(); //原始语种
+    var targetLanguage=$("#target-language").val(); //目标语种
+
+    console.log(tranText);
+    console.log(originLanguage);
+    console.log(targetLanguage);
+
+    $('#myModal').modal('hide');   //隐藏模态框
+
+    $.ajax({ 
+        url: translateI,
+        type: 'POST',
+        data: {q:tranText,
+               from:originLanguage,
+               to:targetLanguage},
+        success: function(data){
+            var content=data.data.trans_result[0].dst;
+            var span=$("<span></span>");
+            span.html(content);
+            span.addClass("main-span");
+            li.append(span);
+            li.css("text-align","left")
+            ul.append(li);
+            showSlow(ul);
+        },
+        timeout:5000,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            ajaxError(ul,textStatus);
+        }
+    });
+}
+
+
+
 //ajax出错：
 ajaxError=function(ul,textStatus){
     var span=$("<span></span>");
@@ -190,21 +320,40 @@ aboutMe=function (){
 
     var li=$("<li></li>");
     li.addClass("main-li");
+    var li2=$("<li></li>");
+    li2.addClass("main-li");
+    var li3=$("<li></li>");
+    li3.addClass("main-li");
+    var li4=$("<li></li>");
+    li4.addClass("main-li");
 
     var span=$("<span></span>");
     span.addClass("main-span");
+    var span2=$("<span></span>");
+    span2.addClass("main-span");
+    var span3=$("<span></span>");
+    span3.addClass("main-span");
+    var span4=$("<span></span>");
+    span4.addClass("main-span");
 
     li.append(span);
     li.css("text-align","center")
+    li2.append(span2);
+    li2.css("text-align","center")
+    li3.append(span3);
+    li3.css("text-align","center")
+    li4.append(span4);
+    li4.css("text-align","center")
     ul.append(li);
+    ul.append(li2);
+    ul.append(li3);
+    ul.append(li4);
 
     var showTime=200;
     fadeEffect(span,"我是蝙蝠侠",showTime,function(){
-        fadeEffect(span,"利用一些免费的公开接口",showTime,function(){
-            fadeEffect(span,"搭建了这个网站",showTime,function(){
-                fadeEffect(span,"联系方式：964939451@qq.com",showTime,function(){
-                    fadeEffect(span,"欢迎给我发送邮件");
-                })
+        fadeEffect(span2,"利用一些免费的公开接口",showTime,function(){
+            fadeEffect(span3,"搭建了这个网站",showTime,function(){
+                fadeEffect(span4,"联系方式：964939451@qq.com");
             })
         })
     })
@@ -212,10 +361,11 @@ aboutMe=function (){
 fadeEffect=function(textSpan,textM,showTime,callback){
     textSpan.html("");
     textSpan.html(textM);
-    textSpan.delay(showTime);
-    textSpan.fadeIn(700,function(){
+    textSpan.hide();
+    textSpan.fadeIn(1000,function(){
         textSpan.delay(showTime);
-        textSpan.fadeOut(800,callback);
+        if(callback)
+            callback();
     })
 }
 

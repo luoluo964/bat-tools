@@ -28,6 +28,25 @@
     </style>
   </head>
   <body>
+    <!--模态框在线翻译-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" id="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+          </div>
+          <div class="modal-body" id="modal-body">
+            
+          </div>
+          <div class="modal-footer"  id="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" id="translate">在线翻译</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="jumbotron">
       <div class="container">
       <h1><span class="glyphicon glyphicon-wrench">蝙蝠工具箱</span></h1>
@@ -40,6 +59,9 @@
           <li><a class="bg-info"  id="lunar-date">今天是几号来着</a></li>
           <li><a class="bg-success"  id="poetry">想起一句古诗</a></li>
           <li><a class="bg-danger "  id="ip-message">我的ip信息</a></li>
+          <li><a class="bg-warning "  id="lover-words">给ta发一句土味情话</a></li>
+          <li><a class="bg-info "  id="beau-pic">来一张漂亮的图片</a></li>
+          <li><a class="bg-danger" data-toggle="modal" data-target="#myModal">在线翻译</a></li>
           <li role="separator" class="divider"></li>
           <li><a class="bg-success" id="about-me">关于我</a></li>
         </ul>
